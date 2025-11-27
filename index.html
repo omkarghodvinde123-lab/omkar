@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Navbar + Card + API</title>
+
+<style>
+    body{
+        background:black;
+        font-family:Arial;
+        margin:0;
+        padding:20px;
+        color:white;
+    }
+
+    /* NAVBAR */
+    .navbar{
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        padding:15px 20px;
+        border:2px solid #ccc;
+        border-radius:15px;
+        margin-bottom:30px;
+        position:sticky;
+        top:0;
+        z-index:10;
+        background-color: rgb(252, 102, 3);
+        box-shadow:0 4px 10px rgba(0,0,0,0.4);
+    }
+
+    .left, .right{
+        display:flex;
+        align-items:center;
+        gap:15px;
+    }
+
+    .logo{
+        width:40px;
+        height:40px;
+        border-radius:8px;
+    }
+
+    .logout{
+        padding:6px 15px;
+        border:1px solid white;
+        border-radius:8px;
+        background:none;
+        color:white;
+        cursor:pointer;
+        transition:0.3s;
+    }
+    .logout:hover{
+        background:white;
+        color:black;
+    }
+
+    /* CARD */
+    .card{
+        width:350px;
+        background:#adafaf;
+        border-radius:20px;
+        padding-bottom:20px;
+        overflow:hidden;
+        position: relative;
+        transition: transform 0.3s ease;
+    }
+
+    .card:hover{
+        transform:scale(1.03);
+    }
+
+    .heart{
+        font-size:28px;
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        cursor:pointer;
+        color:white;
+        text-shadow:0 0 5px black;
+        user-select:none;
+    }
+
+    .heart.red{
+        color:red;
+        text-shadow:0 0 10px black;
+    }
+
+    .card img{
+        width:100%;
+        height:200px;
+        object-fit:cover;
+        border-radius:20px 20px 0 0;
+    }
+
+    .card h1, .card p{
+        color:white;
+        margin:15px;
+    }
+
+    .container{
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 20px;
+        justify-items: center;
+    }
+
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+    <div class="left">
+        <img src="/sh.avif" class="logo">
+        <h1>The Bike Showroom</h1>
+    </div>
+
+    <div class="right">
+        <h2>Guest</h2>
+        <button class="logout">Logout</button>
+    </div>
+</div>
+
+<!-- STATIC CARDS -->
+<div class="container" id="card-container">
+
+    <div class="card">
+        <img src="/Kawasaki NInja h2.jpg">
+        <div class="heart">❤️</div>
+        <h1>Kawasaki Ninja H2</h1>
+        <p>Kawasaki</p>
+        <p>Rs. 35,00,000</p>
+    </div>
+
+    <div class="card">
+        <img src="/Ducati Panigale V4.jpg">
+        <div class="heart">❤️</div>
+        <h1>Ducati Panigale V4</h1>
+        <p>Ducati</p>
+        <p>Rs. 29,99,000</p>
+    </div>
+
+    <div class="card">
+        <img src="/BMW M 1000 RR.jpg">
+        <div class="heart">❤️</div>
+        <h1>BMW M1000 RR</h1>
+        <p>BMW</p>
+        <p>Rs. 35,90,000</p>
+    </div>
+
+    <div class="card">
+        <img src="/honda-cbr1000rr-r-fireblade.jpg">
+        <div class="heart">❤️</div>
+        <h1>Honda CBR1000RR-R Fireblade</h1>
+        <p>Honda</p>
+        <p>Rs. 18,00,000</p>
+    </div>
+
+    <div class="card">
+        <img src="/aprilia-rsv4-factory.jpg">
+        <div class="heart">❤️</div>
+        <h1>Aprilia RSV4 Factory</h1>
+        <p>Piaggio</p>
+        <p>Rs. 31,29,000</p>
+    </div>
+
+    <div class="card">
+        <img src="/Kawasaki Ninja ZX10R.jpg">
+        <div class="heart">❤️</div>
+        <h1>Kawasaki Ninja ZX-10R</h1>
+        <p>Kawasaki</p>
+        <p>Rs. 19,78,000</p>
+    </div>
+
+    <div class="card">
+        <img src="/BMW S1000 RR.jpg">
+        <div class="heart">❤️</div>
+        <h1>BMW S1000 RR</h1>
+        <p>BMW</p>
+        <p>Rs. 27,80,000</p>
+    </div>
+
+    <div class="card">
+        <img src="/Yamaha R15.jpg">
+        <div class="heart">❤️</div>
+        <h1>Yamaha R1M</h1>
+        <p>Yamaha</p>
+        <p>Rs. 30,63,000</p>
+    </div>
+
+</div>
+
+
+<!-- API SCRIPT -->
+ <script>
+
+    // ❤️ Heart Toggle for static & dynamic cards
+    document.addEventListener("click", (e) => {
+        if (e.target.classList.contains("heart")) {
+            e.target.classList.toggle("red");
+        }
+    });
+
+    const container = document.getElementById("card-container");
+
+    async function getData() {
+        try {
+            const result = await fetch("https://fakestoreapi.com/products/");
+            const data = await result.json();
+
+            data.map((item) => {
+                const card = document.createElement("div");
+                card.className = "card";
+
+                card.innerHTML = `
+                    <img src="${item.image}">
+                    <div class="heart">❤</div>
+                    <h1>${item.title}</h1>
+                    <p>$${item.price}</p>
+                `;
+
+                container.append(card);
+            });
+
+        } catch (error) {
+            console.log("ERROR LOADING API:", error);
+        }
+    }
+
+    getData(); // load API cards
+
+</script> 
+
+</body>
+</html>
